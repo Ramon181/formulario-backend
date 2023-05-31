@@ -52,18 +52,18 @@ server.post('/form', (req, res) => {
   server.delete('/form/:id', (req, res) => {
     const userId = req.params.id;
     
-    const query = 'DELETE FROM users WHERE id = ?';
+    const query = 'DELETE FROM formulario WHERE id = ?';
     db.query(query, [userId], (err, result) => {
       if (err) {
-        console.error('Error al borrar el usuario:', err);
+        console.error('Error al borrar el formulario:', err);
         return res.status(500).json({ message: 'Error del servidor' });
       }
       
       if (result.affectedRows === 0) {
-        return res.status(404).json({ message: 'Usuario no encontrado' });
+        return res.status(404).json({ message: 'formulario no encontrado' });
       }
       
-      return res.status(200).json({ message: 'Usuario borrado exitosamente' });
+      return res.status(200).json({ message: 'formulario borrado exitosamente' });
     });
   });
 
