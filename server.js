@@ -49,6 +49,24 @@ server.post('/form', (req, res) => {
     });
   });
 
+  server.delete('/api/users/:id', (req, res) => {
+    const userId = req.params.id;
+    
+    const query = 'DELETE FROM users WHERE id = ?';
+    db.query(query, [userId], (err, result) => {
+      if (err) {
+        console.error('Error al borrar el usuario:', err);
+        return res.status(500).json({ message: 'Error del servidor' });
+      }
+      
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ message: 'Usuario no encontrado' });
+      }
+      
+      return res.status(200).json({ message: 'Usuario borrado exitosamente' });
+    });
+  });
+
 server.listen(port, () => {
   console.log(`Servidor backend escuchando en el puerto ${port}`);
 });
