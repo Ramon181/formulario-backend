@@ -49,7 +49,7 @@ server.post('/form', (req, res) => {
     });
   });
 
-  server.delete('/api/users/:id', (req, res) => {
+  server.delete('/form/:id', (req, res) => {
     const userId = req.params.id;
     
     const query = 'DELETE FROM users WHERE id = ?';
