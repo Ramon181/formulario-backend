@@ -1,29 +1,23 @@
 const express = require("express");
 const cors = require("cors");
-const mysql = require("mysql");
+const mysql = require('mysql');
+require("dotenv")
 
 const server = express();
-const port = 3001;
+const port = 8080;
 
-const db = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "12345",
-  database: "form",
+const db = mysql.createPool({
+  user: process.env.DB_USER, // e.g. 'my-db-user'
+  password: process.env.DB_PASS, // e.g. 'my-db-password'
+  database: process.env.DB_NAME, // e.g. 'my-database'
+  socketPath: `/cloudsql/${process.env.INSTANCE_CONNECTION_NAME}`,
 });
 
-db.connect((err) => {
-  if (err) {
-    console.error("Error al conectar a la base de datos:", err);
-  } else {
-    console.log("Conexión exitosa a la base de datos");
-  }
-});
 
 server.use(cors());
 server.use(express.json())
 
-server.post('/form', (req, res) => {
+server.post('/', (req, res) => {
     const { name, country } = req.body;
     if (!name || !country) {
       return res.status(400).json({ message: 'Faltan campos requeridos' });
@@ -38,7 +32,7 @@ server.post('/form', (req, res) => {
     });
   });
 
-  server.get('/form', (req, res) => {
+  server.get('/', (req, res) => {
     const query = 'SELECT * FROM formulario';
     db.query(query, (err, result) => {
       if (err) {
@@ -66,6 +60,8 @@ server.post('/form', (req, res) => {
       return res.status(200).json({ message: 'formulario borrado exitosamente' });
     });
   });
+
+
 
 server.listen(port, () => {
   console.log(`Servidor backend escuchando en el puerto ${port}`);
